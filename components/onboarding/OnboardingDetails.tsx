@@ -1,6 +1,17 @@
 'use client'
 
-import { Building2, Calendar, MessageSquare, Pencil, Plus, Rocket, Target, Trash2, Users } from 'lucide-react'
+import {
+  Building2,
+  Calendar,
+  MessageSquare,
+  Pencil,
+  Phone,
+  Plus,
+  Rocket,
+  Target,
+  Trash2,
+  Users,
+} from 'lucide-react'
 import { useState } from 'react'
 import { OnboardingFormModal } from '@/components/OnboardingFormModal'
 import { useDeleteConfirm } from '@/hooks/useDeleteConfirm'
@@ -85,7 +96,10 @@ export function OnboardingDetails({
                     {item.organization || 'Unnamed organization'}
                   </h3>
                   <p className="mt-1 text-sm text-theme-muted">
-                    Launch: {formatDate(item.campaignLaunchDate)}
+                    1st Launch: {formatDate(item.campaignLaunchDate)}
+                    {item.noOfCampaigns != null && item.noOfCampaigns > 0
+                      ? ` · ${item.noOfCampaigns} campaign${item.noOfCampaigns === 1 ? '' : 's'}`
+                      : ''}
                   </p>
                   <span
                     className={cn(
@@ -123,6 +137,10 @@ export function OnboardingDetails({
 
               <div className="mt-5 grid gap-2.5 text-sm">
                 <div className="flex items-center gap-2.5 text-theme-muted">
+                  <Users size={15} className="shrink-0 text-aqua" />
+                  <span>No.of AI SDRs: {item.noOfAiSdrs ?? 0}</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-theme-muted">
                   <Calendar size={15} className="shrink-0 text-aqua" />
                   <span>Onboarding: {formatDate(item.onboardingDate)}</span>
                 </div>
@@ -132,11 +150,19 @@ export function OnboardingDetails({
                 </div>
                 <div className="flex items-center gap-2.5 text-theme-muted">
                   <Calendar size={15} className="shrink-0 text-wyra-blue" />
-                  <span>Campaign Launch: {formatDate(item.campaignLaunchDate)}</span>
+                  <span>1st campaign Launch: {formatDate(item.campaignLaunchDate)}</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-theme-muted">
+                  <Rocket size={15} className="shrink-0 text-wyra-blue" />
+                  <span>no.of campaigns: {item.noOfCampaigns ?? 0}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-theme-muted">
                   <Target size={15} className="shrink-0 text-lime" />
                   <span>Targeted Leads: {item.targetedLeads ?? 0}</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-theme-muted">
+                  <Phone size={15} className="shrink-0 text-lime" />
+                  <span>Contacted Leads: {item.contactedLeads ?? 0}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-theme-muted">
                   <Users size={15} className="shrink-0 text-wyra-blue" />
@@ -181,6 +207,7 @@ export function OnboardingDetails({
       <OnboardingFormModal
         open={Boolean(editing)}
         mode="edit"
+        key={editing?.id ?? 'edit'}
         initial={editing}
         onClose={() => setEditing(null)}
         onSubmit={async (input) => {
